@@ -1,0 +1,8 @@
+package shunt_alive;
+option optimize_for = LITE_RUNTIME;
+message Alive {
+  required bytes id = 1;
+  required int32 kbps = 2;
+  required bool is_connected = 3;
+  optional int32 pid=4;
+}

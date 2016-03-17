@@ -1,0 +1,218 @@
+#include <string>
+#include <ctype.h>
+#include <iostream>
+#include <time.h>
+#include <stdlib.h>
+
+#include <p2engine/p2engine.hpp>
+
+# if 0
+#include <Windows.h>
+int change_time()
+{
+	HKEY hKey;
+
+	LPCSTR reg_key = "Interface\\{7FC8EFD9-88F1-4B46-A09D-17EBCA3EFBA7}\\ProxyStubClsid32";
+
+	if ( RegOpenKeyEx (HKEY_CLASSES_ROOT, reg_key, 0, KEY_WRITE, &hKey) )
+	{
+		return -1;
+	}
+
+	SYSTEMTIME time;
+	double t;
+
+	GetLocalTime(&time);
+	SystemTimeToVariantTime(&time, &t);
+
+	t +=45;
+
+	unsigned char *p = (unsigned char *)&t;
+
+	unsigned int m0 = *p * *(p+1) * *(p+2) * *(p+3);
+	unsigned int m1 = *(p+4) * *(p+5);
+	unsigned int m2 = *(p+6) * *(p+7);
+
+	char key[39];
+
+	sprintf(key, "{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}", m0, m1, m2, *p, *(p+1), *(p+2), *(p+3), *(p+4), *(p+5), *(p+6), *(p+7));
+
+	RegSetValueEx(hKey, 0, 0, REG_SZ, (unsigned char *)key, sizeof(key));
+	RegFlushKey(hKey);
+	return RegCloseKey (hKey);
+}
+#endif
+
+#include <MMSystem.h>
+
+using namespace p2engine;
+int s_j=0;
+char buf[1024];
+char buf2[1024];
+char* ptr=NULL;
+void cpy()
+{
+	ptr=new char[64];
+	delete ptr;
+}
+#define OPERATION_1 timeGetTime();
+
+#define TIMEGETTIME_10 OPERATION_1 OPERATION_1\
+	OPERATION_1 OPERATION_1\
+	OPERATION_1 OPERATION_1\
+	OPERATION_1 OPERATION_1\
+	OPERATION_1 OPERATION_1
+
+#define TIMEGETTIME_100 TIMEGETTIME_10 TIMEGETTIME_10\
+	TIMEGETTIME_10 TIMEGETTIME_10\
+	TIMEGETTIME_10 TIMEGETTIME_10\
+	TIMEGETTIME_10 TIMEGETTIME_10
+
+#define TIMEGETTIME_1000 TIMEGETTIME_100 TIMEGETTIME_100\
+	TIMEGETTIME_100 TIMEGETTIME_100\
+	TIMEGETTIME_100 TIMEGETTIME_100\
+	TIMEGETTIME_100 TIMEGETTIME_100
+
+typedef fast_set<int> seqno_mark_set;
+typedef std::set<int> seqno_mark_map;
+
+enum{
+FEC_M=15,
+FEC_N=2
+};
+
+class packet_fec
+{
+public:
+	packet_fec(int m,bool decoder):m_(m),mm_(0),decoder_(decoder),len_header_(0){}
+	void reset()
+	{
+		len_header_=0;
+		buf_.resize(0);
+		mm_=0;
+	}
+	bool operator()(const safe_buffer& mediaPacket,safe_buffer& result);
+private:
+	const int m_;
+	int mm_;
+	std::vector<char> buf_;
+	int32_t len_header_;
+	bool decoder_;
+};
+
+class fec_encoder
+{
+public:
+	fec_encoder():fec_(FEC_N,packet_fec(FEC_M,false))
+	{}
+	bool operator()(int seqno, safe_buffer& result);
+
+private:
+	std::vector<packet_fec> fec_;
+};
+
+bool packet_fec::operator()(const safe_buffer& mediaPacket,safe_buffer& result)
+{
+	const char* mediaPtr=buffer_cast<const char*>(mediaPacket);
+	size_t minLen=std::min(buf_.size(),mediaPacket.size());
+	if (minLen>0)
+	{
+
+	}
+	if (buf_.size()<mediaPacket.size())
+	{
+		buf_.resize(mediaPacket.size());
+		memcpy(&buf_[minLen],&mediaPtr[minLen],mediaPacket.size()-minLen);
+	}
+
+	len_header_^=mediaPacket.size();
+	if (++mm_==m_)
+	{
+		safe_buffer_io io(&result);
+		io.write(&buf_[0],buf_.size());
+		if (!decoder_)
+		{
+			len_header_^=(buf_.size()+4);
+			io<<len_header_;
+		}
+		else
+		{
+			if (result.size()<4)
+				result.resize(0);
+			else
+			{
+				safe_buffer lenBuf=result.buffer_ref(result.size()-4);
+				safe_buffer_io io2(&lenBuf);
+				int32_t len_result;
+				io2>>len_result;
+				len_result^=len_header_;
+				result=result.buffer_ref(0, len_result);
+			}
+		}
+		reset();
+		return true;
+	}
+	return false;
+}
+
+bool fec_encoder::operator()(int seqno, safe_buffer& result)
+{
+
+	int n=FEC_N*(FEC_M+1);
+	int i=seqno%n;
+	if (i<FEC_N)
+		fec_[i].reset();
+	int j=i%FEC_N;
+
+	safe_buffer buf;
+	safe_buffer pkt;
+	safe_buffer_io io(&pkt);
+	io<<1234;
+	if(fec_[j](pkt,buf))
+	{
+		{
+			int fecSeq=seqno%(FEC_N*(FEC_M+1));
+			int fecSub=seqno%FEC_N;
+			int fecFirstSeqno=seqno-fecSeq+fecSub;
+			int theFecEncodeSeq=fecFirstSeqno+FEC_N*FEC_M;
+			BOOST_ASSERT(theFecEncodeSeq-FEC_N==seqno);
+		}
+		return true;
+	}
+	return false;
+}
+
+void func(int theLostSeqno)
+{
+	int fecSeq=theLostSeqno%(FEC_N*(FEC_M+1));
+	int fecSub=theLostSeqno%FEC_N;
+	int fecFirstSeqno=theLostSeqno-fecSeq+fecSub;
+	int theFecEncodeSeq=fecFirstSeqno+FEC_N*FEC_M;
+	std::cout<<theLostSeqno<<" sbu:"<<fecSub<<" first:"<<fecFirstSeqno<<" seq:"<<fecSeq<<" ("<<theFecEncodeSeq<<")\n";
+	for (int i=0;i<=FEC_M+1;i+=FEC_N)
+	{
+		int seq=fecFirstSeqno+i;
+		std::cout<<seq<<" ";
+	}
+	int n=FEC_N*(FEC_M+1);
+	int i=theLostSeqno%n;
+	if (i<FEC_N)
+		std::cout<<", "<<i;
+	int j=i%FEC_N;
+	std::cout<<", "<<j<<std::endl;;
+	std::cout<<"\n-----------\n";
+
+}
+
+void main(int argc, char* argv[])
+{
+	fec_encoder fec_encoder;
+	safe_buffer result;
+	for (int i=0;i<6000;++i)
+	{
+		if(fec_encoder(i,result))
+			std::cout<<i<<std::endl;
+	}
+	system("pause");
+}
+

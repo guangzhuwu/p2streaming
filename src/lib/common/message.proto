@@ -1,0 +1,465 @@
+package p2message;
+
+option optimize_for = LITE_RUNTIME;
+
+//NAT类型定义
+enum peer_nat_type
+{
+	NAT_UNKNOWN= 0;
+	NAT_OPEN_OR_FULL_CONE=1;
+	NAT_IP_RESTRICTED=2;
+	NAT_IP_PORT_RESTRICTED=3;
+	NAT_SYMMETRIC_NAT=4;
+	NAT_UDP_BLOCKED=5;
+};
+enum peer_type
+{
+	SERVER= 0;
+	ASSIST_SERVER= 1;
+	ASSIST_PEER= 2;
+	NORMAL_PEER= 3;
+};
+
+//节点信息
+message peer_info
+{
+	required bytes			peer_id = 1;
+	required peer_nat_type  nat_type = 2 [default = NAT_UNKNOWN];
+	required uint32			upload_capacity=3[default = 64000];
+	required peer_type		peer_type = 4 [default = NORMAL_PEER];
+	required uint64			join_time=5[default=0];//加入时间戳，s，便于节点知晓比其加入早还是晚
+	required uint32			info_version=6[default = 0];//节点信息的版本，节点每次改动都要更新版本，以便于其它节点知道哪个版本是最新的
+	required uint32			external_ip =7 [default = 0];
+	required uint32			external_udp_port=8 [default = 0];
+	required uint32			external_tcp_port=9 [default = 0];
+	required uint32			internal_ip=10 [default = 0];
+	required uint32			internal_udp_port=11 [default = 0];
+	required uint32			internal_tcp_port=12 [default = 0];
+	repeated uint32			other_internal_ip=13 ;//
+	required int32			relative_playing_point=14 [default = -1];//直播中不需要这项，设置为-1
+
+	optional float          playing_quality = 15;
+	optional float          global_remote_to_local_lost_rate = 16;
+	optional bytes			user_info =17;//一些用户层信息，例如用户的userID,nickname等，格式由具体应用自行设计
+	
+	optional float			version =18[default = 1.0];//p2p协议的版本
+	repeated bytes			cache_server_ipport=19;//缓存服务器地址，可以有多个
+}
+
+//buffermap信息
+message buffermap_info
+{
+   repeated fixed32	 recent_seqno= 1;
+   optional fixed32  bigest_seqno_i_know=2;
+   optional fixed32  smallest_seqno_i_have=3;
+   optional fixed32  first_seqno_in_bitset=4;
+   optional fixed32  erased_seq_begin=5;
+   optional fixed32  erased_seq_end=6;
+   optional bytes    bitset=7;
+   repeated fixed32  iframe_seqno= 8;
+}
+
+//片段信息
+message piece_info
+{
+    required fixed32  timestamp=1;
+    required fixed32  seqno=2;
+}
+
+
+//////////////////////////////////////////////////////////
+/////以下为Server和Tracker交互报文
+//////////////////////////////////////////////////////////
+
+//直播频道信息
+message live_channel_info
+{
+	required bytes  channel_uuid=1;
+	required sfixed32 server_time=2;
+	required fixed32 server_seqno=3;
+	required uint32 server_packet_rate=4;
+}
+
+//点播频道信息
+message vod_channel_info
+{
+	required bytes  channel_link=1; //link
+	required bytes  channel_uuid=2;//uuid
+	required int32	film_duration=3;//影片持续时间,msec
+	required int32	film_length=4;//影片长度,byte
+}
+
+//直播服务器向ts报告当前频道信息状态
+message s2ts_channel_report_msg
+{
+	required live_channel_info	channel_info=1;
+	repeated fixed32			iframe_seqno= 2;
+};
+
+//要求ts创建索引服务
+message s2ts_create_channel_msg
+{
+	required peer_info			server_info=1;
+	optional live_channel_info	live_channel_info = 2; 
+	optional vod_channel_info   vod_channel_info = 3;
+	required uint32             distribute_type = 4;    
+};
+//请求频道信息
+message s2ts_channel_status_req
+{
+	required bytes  channel_id=1;
+};
+//tracker发送给server的频道在线信息
+message ts2s_channel_status
+{
+    required uint32   live_cnt=1;  //正在观看人数
+    required float    playing_quality = 2;  
+    required float    rtol_lost_rate = 3;
+    optional p2ts_quality_report_msg quality_info=4;//播放质量
+};
+
+//////////////////////////////////////////////////////////
+/////以下为Peer和Tracker交互报文
+//////////////////////////////////////////////////////////
+
+//挑战码 trackerserver-->peer
+message ts2p_challenge_msg
+{
+	required bytes challenge=1;
+};
+
+//登录请求peer-->trackerserver
+message p2ts_login_msg
+{
+	required uint32 session_id=1;
+	required bytes	channel_id=2;
+	required peer_info peer_info=3;
+	required bytes public_key=4;//peer的公钥
+	required bytes shared_key_signature=5;//sharedkey摘要
+	required bytes certificate=6;//证书，一般是从CMS获取的来的
+};
+
+//登录响应trackerserver-->peer
+message ts2p_login_reply_msg
+{
+	repeated peer_info peer_info_list=1;
+	required uint32 error_code = 2;
+	required uint32 session_id = 3;
+	required uint32 external_ip = 4;
+	required uint32 external_port = 5;
+	required uint32 online_peer_cnt=6;
+	required uint64 join_time=7;
+	required bytes  channel_id=8;
+	optional live_channel_info	live_channel_info=9;
+	optional vod_channel_info	vod_channel_info=10;
+	optional bytes cache_tracker_addr=11;	
+	repeated fixed32 iframe_seqno= 12;
+};
+
+//向Tracker请求邻居列表
+message p2ts_peer_request_msg
+{
+	required uint32 session_id=1;
+	required peer_info peer_info=2;
+	optional bytes  channel_uuid=3;
+}
+
+//回应邻居列表请求
+message ts2p_peer_reply_msg
+{
+	required uint32 error_code = 1;
+	required uint32 session_id=2;
+	required bytes  channel_id = 3;
+	repeated peer_info peer_info_list=4;
+	optional uint32 cache_peer_cnt=5;
+}
+
+//退出
+message p2ts_logout_msg
+{
+	required bytes  peer_id =1;
+	required uint32 peer_key=2;
+	optional bytes  channel_uuid=3;
+}
+
+//掉线报告
+message p2ts_failure_report_msg
+{
+	required bytes peer_id = 1;
+	optional bytes channel_uuid=2;
+}
+//本地报告
+message p2ts_local_info_report_msg
+{
+	required peer_info peer_info=2;
+}
+
+ //踢人
+message ts2p_kickout_msg
+{
+   required uint32  error_code=1;
+   optional bytes	reasion=2;
+}
+message p2ts_kickout_msg
+{
+   required uint32  error_code=1;
+   optional bytes	reasion=2;
+}
+
+message ts2p_room_info_msg
+{
+   required uint32		online_peer_cnt=1;
+   repeated bytes		offline_peer_list=2;
+   repeated peer_info	new_login_peer_list=3;
+   repeated peer_info	online_peer_list=4;
+}
+
+message p2ts_ban_msg
+{
+   required bool  is_admin=1;
+   required bool  is_ban=2;
+   required bool  is_txt=3;
+   required bytes dst_peer_id =4;
+   required bytes src_peer_id =5;
+}
+
+message p2ts_quality_report_msg
+{
+	required uint64 id=1;
+	required fixed32 ip=2;
+	required float playing_quality=3;//播放质量
+	required float uplink_lostrate=4;//上行链路丢包率
+	required float downlink_lostrate=5;//下行链路丢包率
+	required float push_rate=6;//推送率
+	required float duplicate_rate=7;//片段重复率
+	required float share_rate=8;//上载率(上载速度与下载速度的比率)
+	required float buffer_health=9;//buffer健康度
+	optional int32 delay=10;//启动延迟，只有播放后才携带
+	optional int32 cpu=11;//cpu使用，PC上不做统计，只box携带
+}
+
+message cached_channel_info
+{
+	required int32 healthy=1;//健康度，server为>100,一般节点<=100
+	required bytes channel_id=2;
+}
+message p2ts_cache_announce_msg
+{
+	repeated cached_channel_info  cached_channels=1;
+	repeated bytes  erased_channels=2;
+	required peer_info peer_info=3;
+}
+
+//////////////////////////////////////////////////////////
+/////以下为server-peer
+//////////////////////////////////////////////////////////
+
+//种子节点推荐指令
+message s2p_recommend_seed_msg
+{
+   required uint32  ttl=1[default = 6];
+}
+
+//服务器向seed通知最新片段
+message s2p_piece_notify
+{
+	required buffermap_info buffermap=1;//buffermap
+}
+
+//节点信息报告
+message p2s_info_report_msg
+{
+   required uint32  upload_speed=1;
+   required float   lost_rate=2;
+}
+
+
+
+//////////////////////////////////////////////////////////
+/////以下为Peer和Peer间的交互报文，不断添加中
+//////////////////////////////////////////////////////////
+
+//建立连接后，首先要握手，以使得对方知道自己的节点信息
+message p2p_handshake_msg
+{
+	required bytes			playing_channel_id=1;
+	required peer_info		peer_info=2;
+	optional buffermap_info	buffermap=3;
+	optional bytes			compressed_buffermap=4;
+	optional bytes			chunkmap=5;
+}
+
+message p2p_buffermap_request_msg
+{
+	required fixed32	min_seqno=1;
+	required fixed32	max_seqno=2;
+}
+
+//周期交换邻居表
+message p2p_neighbor_table_exchange
+{
+	repeated peer_info		same_channel_peer_info_list=1;
+	repeated peer_info		cache_peer_info_list=2;
+	repeated bytes			known_neighbor_list=3;
+}
+
+//请求对方监督自己的在线状态
+message p2p_supervise_request_msg
+{
+	required buffermap_info buffermap=1;//buffermap
+	required uint32			peer_key = 2;
+}
+
+//stream层节点信息
+//message p2p_stream_peer_info_msg
+//{  
+//	required buffermap_info buffermap=1;//buffermap
+//	required bool           is_seed=2; //是否是seed节点
+//	required uint32         upload_speed=3;//上行带宽
+//    required float          lost_rate=4;//丢包率
+//}
+
+//////////////////////////////////////////////////////////
+/////以下为节点间都可发送
+//Gossip(Flood/broadcast)消息
+message relay_msg
+{
+   required int32   level= 1;//system-level or user-level
+   required uint64  msg_id = 2;//消息UUID
+   required bytes	src_peer_id = 3;//源ID
+   required bytes	dst_peer_id = 4;//目的ID
+   required uint32  ttl=5 [default = 4];//消息的TTL
+   required bytes	msg_data=6;//数据
+   optional bytes   channel_uuid=7;
+} 
+
+message broadcast_msg
+{
+   required int32   level= 1;//system-level or user-level
+   required uint64  msg_id = 2;//消息UUID
+   required bytes   src_peer_id = 3;//消息源
+   required uint32  ttl=4 [default = 4];//消息的TTL
+   optional bytes	bloomfilter=5;//经历过的节点
+   required bytes	msg_data=6;//数据
+} 
+    
+message buffermap_exchange_msg
+{
+    required buffermap_info  buffermap= 1;
+	optional sfixed32        current_playing_timestamp=2;
+}
+
+message join_channel_msg
+{
+    required bytes  channel_id= 1;
+}
+
+message media_request_msg
+{
+   required bool			direct_request= 1;
+   required bytes			peer_id =2;
+   repeated fixed32			seqno= 3;
+   optional sfixed32		current_playing_timestamp=4;
+
+   optional bytes			channel_id= 5;//只对vod BT类才有用
+   optional buffermap_info  buffermap= 6;
+}
+
+message media_subscription_msg
+{
+    repeated uint32          substream_id= 1;
+    required buffermap_info  buffermap= 2;
+	repeated fixed32         ignore_seqno_list=3;
+	optional sfixed32        current_playing_timestamp=4;
+}
+
+message punch_request_msg
+{
+    required uint32  ip= 1;
+    required uint32  port= 2;
+    required bytes   msg_data=3;//数据
+}
+
+//已发数据确信（周期发送100ms内发给了对方的数据）
+message media_sent_confirm_msg
+{
+	repeated fixed32 seqno=1;
+}
+
+//服务器向seed发送没有这个片段的消息
+message no_piece_msg
+{
+	required fixed32 seqno=1;
+	optional fixed32 min_seqno=2;
+	optional fixed32 max_seqno=3;
+	optional int32   wait_time=4;
+}
+
+//时间服务器发送给tracker
+message time_server_2_tracker
+{
+    required uint64 curr_time = 1;
+}
+
+//mds接收频道创建、删除及退出mds消息
+message ctrl2m_create_channel_msg
+{
+	required int32 type=1;
+	required bytes name=2;
+	required bytes channel_link=3;
+	required bytes channel_uuid=4;
+	required bytes internal_address=5;
+	required bytes external_address=6;
+	repeated bytes tracker_address=7;
+		
+	optional bool   enable_live_cache=8;
+	optional bytes  stream_recv_url=9;
+	optional bytes  live_cache_dir=10;
+	optional uint64 max_duration=11;
+	optional uint64 max_length_per_file=12;
+
+	optional bytes media_directory=13;
+	optional uint64 duration=14;
+	optional uint64 length=15;
+	
+	optional bytes channel_key=16;
+}
+
+message ctrl2s_create_channel_msg
+{
+    required bytes id=1;
+    required bytes receive_url=2;
+    repeated bytes send_urls=3;
+}
+
+message mds_cmd_msg
+{
+	required bytes  session_id=1;
+	required bytes  cmd = 2;
+	repeated bytes  channel_ids = 3;
+	repeated ctrl2m_create_channel_msg channel_info=4;
+	optional ctrl2s_create_channel_msg shunt_info=5;
+	optional bytes  config_val = 6;
+	optional bool   is_login_reply=7;
+}
+
+message c2s_cmd_reply_msg
+{
+	required bytes  session_id =1;
+	required uint32 code=2;
+	required bytes  id=3;
+	required int32  type=4;
+	optional bytes  msg =5;
+}
+
+message c2s_auth_msg
+{
+    required bytes message=1;
+}
+
+message alive_alarm_report_msg
+{
+	required bytes  id = 1;
+	optional int32  type=2;
+	optional int32  pid=3;
+}

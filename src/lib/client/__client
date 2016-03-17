@@ -1,0 +1,262 @@
+//
+// room.h
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// Copyright (c) 2008 GuangZhu Wu (GuangZhuWu@gmail.com)
+//
+// All rights reserved. 
+//
+#ifndef peer_room_h__
+#define peer_room_h__
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+# pragma once
+#endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+#include <p2engine/p2engine.hpp>
+
+#include <p2engine/push_warning_option.hpp>
+#include <boost/array.hpp>
+#include <boost/thread.hpp>
+#include <p2engine/pop_warning_option.hpp>
+
+#include "common/common.h"
+#include "livestreaming/livestreaming_interface.h"
+
+using namespace p2engine;
+
+class client_interface;
+
+namespace tt_server{
+	class server;
+}
+
+namespace tt_client{
+	class client_service;
+	typedef tt_server::server server;
+
+	class client
+		:public basic_object
+	{
+		typedef client this_type;
+		SHARED_ACCESS_DECLARE;
+	public:
+		typedef  client_interface::peer_id peer_id;
+		typedef  client_interface::media_channel_id_t media_channel_id_t;
+		typedef  client_interface::roles roles;
+		static const peer_id INVALID_PEER_ID=client_interface::INVALID_PEER_ID;
+	
+	protected:
+		client(client_interface&);
+		virtual ~client();
+
+	public:
+		static shared_ptr create(client_interface& itface)
+		{
+			return shared_ptr(new this_type(itface),
+				shared_access_destroy<this_type>());
+		}
+
+	public:
+		int  external_udp_port();
+		int  external_tcp_port();
+
+	public:
+		//启动 client
+		void start(const std::string& channelUUID,
+			const std::string& trackerHost,int trackerPort,
+			const std::string& userInfo);
+
+		void stop();
+
+	public:
+		/************************************************************************/
+		/* 房间管理相关                                                         */
+		/************************************************************************/
+		//管理员权限
+		//踢走某个人，只有创建者和管理员才有权限
+		void kickout_by_admin(peer_id peerID,const std::string& reason);
+		//更改他人角色，只有创建者才有权修改
+		void change_role_by_admin(peer_id peerID,roles role);
+		//屏蔽某节点的公聊发言
+		void ban_broadcast_message_by_admin(peer_id peerID,bool ban);
+		//禁止某人的视频分发
+		void ban_distribute_media_by_admin(peer_id peerID,bool ban);
+
+		//一般用户权限
+		//屏蔽某节点的公聊发言
+		void ban_broadcast_message(peer_id peerID,bool ban);
+		//禁止某人的视频分发
+		void ban_distribute_media(peer_id peerID,bool ban);
+
+		/************************************************************************/
+		/* 聊天消息相关                                                         */
+		/************************************************************************/
+		//向某节点单播消息
+		void send_message_to(const void* msg,size_t msgLen, peer_id dstPeerID);
+		//向网络广播消息
+		void broadcast_message(const void* msg,size_t msgLen);
+
+		/************************************************************************/
+		/* 举手发言相关                                                         */
+		/************************************************************************/
+		//举手
+		void handsup();
+		//分发混合打包的音视频,或者用户定义的其他类型的媒体
+		void distribute_media(const void*data,size_t dataLen, 
+			media_channel_id_t mediaChannelID,bool reliable=false);
+
+
+		/************************************************************************/
+		/* 本节点信息相关                                                       */
+		/************************************************************************/
+		//自己的角色
+		roles my_role();
+		//获取自己的id
+		peer_id my_id()const;
+		//获取当前的自己nickname
+		std::string my_nickname()const;
+		//更改的自己nickname
+		void change_my_nickname(const std::string&);
+		//获取某个peer的nickname
+		std::string nickname(peer_id id)const;
+
+
+		/************************************************************************/
+		/* 收看房间内其他节点相关                                               */
+		/************************************************************************/
+		//收看其他节点
+		void look(peer_id peerID);
+		//踢掉收看者（不让对方看自己）
+		void kickout_looker(peer_id peerID,const std::string& reason);
+
+	public:
+		/************************************************************************/
+		/*登录与在线状态相关                                                    */
+		/************************************************************************/
+		//登录失败
+		void on_login_failed(const std::string& errorMsg);
+		//登录成功
+		void on_login_success();
+		//登录成功后，收到服务器的欢迎词
+		void on_welcome(const std::string& welcome);
+		//被服务器剔除房间
+		void on_kickout(const std::string& reason);
+		//意外掉线
+		void on_droped();
+
+
+		/************************************************************************/
+		/* 消息传递相关                                                         */
+		/************************************************************************/
+		//收到组播消息
+		 void on_recvd_broadcast_msg(const std::string& msg);
+		//收到单播消息
+		 void on_recvd_msg(const std::string& msg,peer_id srcPeerID);
+
+
+		/************************************************************************/
+		/* room状态                                                             */
+		/************************************************************************/
+		//有新节点加入room
+		 void on_join_new_peer(peer_id newPeerID, const std::string& userInfo
+			 ,roles role);
+		//发现了一个早于该节点在线的节点
+		 void on_known_peer(peer_id newPeerID, const std::string& userInfo
+			 ,roles role);
+		//节点离开
+		 void on_remove_peer(peer_id newPeerID);
+		//节点改名
+		 void on_user_info_changed(peer_id newPeerID, const std::string& oldUserInfo, 
+			const std::string& newUserInfo);
+
+
+		/************************************************************************/
+		/* 举手相关                                                             */
+		/************************************************************************/
+		//举手节点名单
+		typedef int place_id;
+		typedef std::list<std::pair<peer_id,place_id > > handsup_peer_list;
+		 void on_handsup_peer_list(const handsup_peer_list& infos);
+		//自己举手后的结果情况
+		 void on_handsup_success();
+		 void on_handsup_failed(const std::string& reason);
+
+
+		/************************************************************************/
+		/* 媒体流相关                                                           */
+		/************************************************************************/
+		//收到媒体流
+		 void on_recvd_media(const void*data,size_t len, peer_id srcPeerID,
+			 media_channel_id_t mediaChannelID);
+		//节点被允许分发自己的音视频
+		 void on_start_distribute_media();
+		//节点被停止允许分发自己的音视频
+		 void on_stop_distribute_media();
+
+
+		/************************************************************************/
+		/* 收看房间内其他节点相关                                               */
+		/************************************************************************/
+		//收看房间内的其他人失败
+		 void on_watch_failed(peer_id actor,const std::string& errorMsg);
+		//收看房间内的其他人成功
+		 void on_watch_success(peer_id actor);
+		//收看房间内的其他人时被踢
+		 void on_watch_kickout(peer_id actor);
+		//有收看者looker加入actor
+		 void on_add_watcher(peer_id actor,peer_id looker);
+		//有收看者looker离开actor
+		 void on_remove_watcher(peer_id actor,peer_id looker);
+
+
+		/************************************************************************/
+		/* 角色变更                                                             */
+		/************************************************************************/
+		 void on_role_change(peer_id peerID,roles role);
+
+	protected:
+		void __start();
+		void __start_natpmp();
+		void __start_client_service();
+		void __start_client_service_delay(const error_code& ec);
+
+		void __stop_without_holder();
+		void __stop();
+		void __stop_natpmp();
+
+	protected:
+		// called when a port mapping is successful, or a router returns
+		// a failure to map a port
+		void on_port_mapping(int mapping, int port,const error_code& ec
+			, int nat_transport);
+		void nat_punch_log(const char*) ;
+	protected:
+		bool stoped_;
+
+		boost::shared_ptr<io_service> net_service_;
+		boost::shared_ptr<client_service> client_service_;
+		std::string channel_uuid_;
+		std::string tracker_host_;
+		int tracker_port_;
+		std::string user_info_;
+		client_interface* client_interface_;
+
+		//upnp或natpmp用
+		message_acceptor_sptr urdp_acceptor_;
+		message_acceptor_sptr trdp_acceptor_;
+		boost::intrusive_ptr<upnp> upnp_;
+		boost::intrusive_ptr<natpmp> natpmp_;
+		boost::shared_ptr<connection_queue> half_open_;
+		int udp_mapping_[2];
+		int tcp_mapping_[2];
+		int extern_udp_port_;
+		int extern_tcp_port_;
+		std::auto_ptr<boost::asio::deadline_timer> delay_start_client_service_timer_;
+		bool delay_start_client_service_called_;
+
+		boost::recursive_mutex  mutex_;
+		boost::shared_ptr<boost::thread> thread_;
+	};
+}
+#endif//peer_room_h__

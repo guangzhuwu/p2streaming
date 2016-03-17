@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="test_props"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="libprotobuf-lite.lib common.lib client.lib server.lib tracker.lib iphlpapi.lib simple_server.lib asfio.lib libupnp.lib"
+		AdditionalLibraryDirectories="&quot;$(BOOST_LIB)&quot;;&quot;$(OUTDIR)&quot;"
+	/>
+</VisualStudioPropertySheet>

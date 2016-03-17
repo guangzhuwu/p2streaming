@@ -1,0 +1,1 @@
+protoc.exe --cpp_out=./ pa_message.proto

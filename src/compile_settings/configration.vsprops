@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="configration"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDE)&quot;;&quot;$(PROTOBUF_INCLUDE)&quot;;&quot;$(SolutionDir)..\..\..\src\lib\p2engine\&quot;;&quot;$(SolutionDir)..\..\..\src\lib\&quot;;&quot;$(SolutionDir)..\..\..\src\lib\p2engine\p2engine\&quot;"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="libprotobuf-lite.lib"
+		AdditionalLibraryDirectories="&quot;$(BOOST_LIB)&quot;"
+	/>
+	<UserMacro
+		Name="SOLUTION_DIR"
+		Value="$(SolutionDir)"
+	/>
+</VisualStudioPropertySheet>

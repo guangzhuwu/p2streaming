@@ -1,0 +1,6 @@
+#ifndef __BPI_SHUNT_VERSION
+#define __BPI_SHUNT_VERSION
+
+#define BPI_SHUNT_VERSION "2.0.0 Beta"
+
+#endif//__BPI_SHUNT_VERSION

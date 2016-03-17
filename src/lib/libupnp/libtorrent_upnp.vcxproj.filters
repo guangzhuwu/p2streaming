@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\device_xml_fetcher.cpp" />
+    <ClCompile Include="src\error_code.cpp" />
+    <ClCompile Include="src\escape_string.cpp" />
+    <ClCompile Include="src\http_parser.cpp" />
+    <ClCompile Include="src\upnp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="xml_parse.hpp" />
+    <ClInclude Include="buffer.hpp" />
+    <ClInclude Include="device_xml_fetcher.h" />
+    <ClInclude Include="error_code.hpp" />
+    <ClInclude Include="escape_string.hpp" />
+    <ClInclude Include="http_parser.hpp" />
+    <ClInclude Include="upnp.hpp" />
+    <ClInclude Include="utility.h" />
+    <ClInclude Include="version.hpp" />
+  </ItemGroup>
+</Project>

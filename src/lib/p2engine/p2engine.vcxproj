@@ -1,0 +1,435 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Fast|Win32">
+      <Configuration>Release Fast</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Fast|x64">
+      <Configuration>Release Fast</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Test|Win32">
+      <Configuration>Release Test</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Test|x64">
+      <Configuration>Release Test</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\basic_dispatcher.cpp" />
+    <ClCompile Include="src\broadcast_socket.cpp" />
+    <ClCompile Include="src\convertutf.cpp" />
+    <ClCompile Include="src\enum_net.cpp" />
+    <ClCompile Include="src\file\file_api.cpp" />
+    <ClCompile Include="src\gzip.cpp" />
+    <ClCompile Include="src\http\basic_http_dispatcher.cpp" />
+    <ClCompile Include="src\http\header.cpp" />
+    <ClCompile Include="src\http\http_connection_impl.cpp" />
+    <ClCompile Include="src\http\mime_types.cpp" />
+    <ClCompile Include="src\http\request.cpp" />
+    <ClCompile Include="src\http\response.cpp" />
+    <ClCompile Include="src\logging.cpp" />
+    <ClCompile Include="src\nedmalloc\nedmalloc.cpp" />
+    <ClCompile Include="src\ntp.cpp" />
+    <ClCompile Include="src\puff.cpp" />
+    <ClCompile Include="src\rdp\basic_shared_tcp_layer.cpp" />
+    <ClCompile Include="src\rdp\basic_shared_udp_layer.cpp" />
+    <ClCompile Include="src\rdp\trdp_flow.cpp" />
+    <ClCompile Include="src\rdp\urdp_flow.cpp" />
+    <ClCompile Include="src\safe_buffer.cpp" />
+    <ClCompile Include="src\socket_utility.cpp" />
+    <ClCompile Include="src\time.cpp" />
+    <ClCompile Include="src\uri.cpp" />
+    <ClCompile Include="src\utf8.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="p2engine\acceptor.hpp" />
+    <ClInclude Include="p2engine\atomic.hpp" />
+    <ClInclude Include="p2engine\basic_dispatcher.hpp" />
+    <ClInclude Include="p2engine\basic_engine_object.hpp" />
+    <ClInclude Include="p2engine\basic_memory_pool.hpp" />
+    <ClInclude Include="p2engine\basic_object.hpp" />
+    <ClInclude Include="p2engine\basic_object_allocator.hpp" />
+    <ClInclude Include="p2engine\basic_packet.hpp" />
+    <ClInclude Include="p2engine\bool_convertable.hpp" />
+    <ClInclude Include="p2engine\broadcast_socket.hpp" />
+    <ClInclude Include="p2engine\byteorder.hpp" />
+    <ClInclude Include="p2engine\compressed_bitset.hpp" />
+    <ClInclude Include="p2engine\config.hpp" />
+    <ClInclude Include="p2engine\connection.hpp" />
+    <ClInclude Include="p2engine\contrib.hpp" />
+    <ClInclude Include="p2engine\convertutf.h" />
+    <ClInclude Include="p2engine\coroutine.hpp" />
+    <ClInclude Include="p2engine\enum_net.hpp" />
+    <ClInclude Include="p2engine\fast_stl.hpp" />
+    <ClInclude Include="p2engine\file\aiofile.hpp" />
+    <ClInclude Include="p2engine\file\basic_aiofile.hpp" />
+    <ClInclude Include="p2engine\file\basic_io_handle.hpp" />
+    <ClInclude Include="p2engine\file\file_api.hpp" />
+    <ClInclude Include="p2engine\file\file_background_service.hpp" />
+    <ClInclude Include="p2engine\file\normal_aiofile_service.hpp" />
+    <ClInclude Include="p2engine\file\posix_aiofile_service.hpp" />
+    <ClInclude Include="p2engine\file\win_aiofile_service.hpp" />
+    <ClInclude Include="p2engine\get_derived_this.hpp" />
+    <ClInclude Include="p2engine\gzip.hpp" />
+    <ClInclude Include="p2engine\handler_allocator.hpp" />
+    <ClInclude Include="p2engine\http\atom.hpp" />
+    <ClInclude Include="p2engine\http\basic_http_dispatcher.hpp" />
+    <ClInclude Include="p2engine\http\header.hpp" />
+    <ClInclude Include="p2engine\http\http.hpp" />
+    <ClInclude Include="p2engine\http\http_acceptor.hpp" />
+    <ClInclude Include="p2engine\http\http_acceptor_base.hpp" />
+    <ClInclude Include="p2engine\http\http_connection.hpp" />
+    <ClInclude Include="p2engine\http\http_connection_base.hpp" />
+    <ClInclude Include="p2engine\http\http_connection_impl.hpp" />
+    <ClInclude Include="p2engine\http\mime_types.hpp" />
+    <ClInclude Include="p2engine\http\request.hpp" />
+    <ClInclude Include="p2engine\http\response.hpp" />
+    <ClInclude Include="p2engine\intrusive_ptr_base.hpp" />
+    <ClInclude Include="p2engine\io.hpp" />
+    <ClInclude Include="p2engine\io_service_pool.hpp" />
+    <ClInclude Include="p2engine\keeper.hpp" />
+    <ClInclude Include="p2engine\local_id_allocator.hpp" />
+    <ClInclude Include="p2engine\logging.hpp" />
+    <ClInclude Include="p2engine\macro.hpp" />
+    <ClInclude Include="p2engine\mutex.hpp" />
+    <ClInclude Include="p2engine\nedmalloc\malloc.c.h" />
+    <ClInclude Include="p2engine\nedmalloc\nedmalloc.h" />
+    <ClInclude Include="p2engine\ntp.hpp" />
+    <ClInclude Include="p2engine\object_allocator.hpp" />
+    <ClInclude Include="p2engine\operation_mark.hpp" />
+    <ClInclude Include="p2engine\operation_queue.hpp" />
+    <ClInclude Include="p2engine\p2engine.hpp" />
+    <ClInclude Include="p2engine\packet.hpp" />
+    <ClInclude Include="p2engine\packet_format_def.hpp" />
+    <ClInclude Include="p2engine\pop_warning_option.hpp" />
+    <ClInclude Include="p2engine\post_in_constructor.hpp" />
+    <ClInclude Include="p2engine\puff.hpp" />
+    <ClInclude Include="p2engine\push_warning_option.hpp" />
+    <ClInclude Include="p2engine\random.hpp" />
+    <ClInclude Include="p2engine\raw_buffer.hpp" />
+    <ClInclude Include="p2engine\rdp.hpp" />
+    <ClInclude Include="p2engine\rdp\basic_shared_tcp_layer.hpp" />
+    <ClInclude Include="p2engine\rdp\basic_shared_udp_layer.hpp" />
+    <ClInclude Include="p2engine\rdp\basic_urdp_visitor.hpp" />
+    <ClInclude Include="p2engine\rdp\const_define.hpp" />
+    <ClInclude Include="p2engine\rdp\rdp_fwd.hpp" />
+    <ClInclude Include="p2engine\rdp\trdp_acceptor.hpp" />
+    <ClInclude Include="p2engine\rdp\trdp_connection.hpp" />
+    <ClInclude Include="p2engine\rdp\trdp_flow.hpp" />
+    <ClInclude Include="p2engine\rdp\urdp_acceptor.hpp" />
+    <ClInclude Include="p2engine\rdp\urdp_connection.hpp" />
+    <ClInclude Include="p2engine\rdp\urdp_flow.hpp" />
+    <ClInclude Include="p2engine\rdp\urdp_visitor.hpp" />
+    <ClInclude Include="p2engine\running_service.hpp" />
+    <ClInclude Include="p2engine\safe_buffer.hpp" />
+    <ClInclude Include="p2engine\safe_buffer_io.hpp" />
+    <ClInclude Include="p2engine\shared_access.hpp" />
+    <ClInclude Include="p2engine\singleton.hpp" />
+    <ClInclude Include="p2engine\socket_utility.hpp" />
+    <ClInclude Include="p2engine\speed_meter.hpp" />
+    <ClInclude Include="p2engine\spinlock.hpp" />
+    <ClInclude Include="p2engine\ssl_stream_wrapper.hpp" />
+    <ClInclude Include="p2engine\time.hpp" />
+    <ClInclude Include="p2engine\timer.hpp" />
+    <ClInclude Include="p2engine\trafic_statistics.hpp" />
+    <ClInclude Include="p2engine\typedef.hpp" />
+    <ClInclude Include="p2engine\type_traits.hpp" />
+    <ClInclude Include="p2engine\uri.hpp" />
+    <ClInclude Include="p2engine\utf8.hpp" />
+    <ClInclude Include="p2engine\utilities.hpp" />
+    <ClInclude Include="p2engine\variant_endpoint.hpp" />
+    <ClInclude Include="p2engine\wrappable_integer.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7AD547B8-8F01-4514-B377-A4CB0DBD7F5C}</ProjectGuid>
+    <RootNamespace>p2net</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\..\bin\$(Configuration)\$(PlatformName)\$(PlatformToolset)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\..\bin\$(Configuration)\$(PlatformName)\$(PlatformToolset)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\..\intermediate\$(Configuration)\$(PlatformName)\$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\..\intermediate\$(Configuration)\$(PlatformName)\$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\..\bin\$(Configuration)\$(PlatformName)\$(PlatformToolset)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'">$(SolutionDir)..\..\..\bin\$(Configuration)\$(PlatformName)\$(PlatformToolset)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\..\bin\$(Configuration)\$(PlatformName)\$(PlatformToolset)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'">$(SolutionDir)..\..\..\bin\$(Configuration)\$(PlatformName)\$(PlatformToolset)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'">$(SolutionDir)..\..\..\bin\$(Configuration)\$(PlatformName)\$(PlatformToolset)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'">$(SolutionDir)..\..\..\bin\$(Configuration)\$(PlatformName)\$(PlatformToolset)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\..\intermediate\$(Configuration)\$(PlatformName)\$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'">$(SolutionDir)..\..\..\intermediate\$(Configuration)\$(PlatformName)\$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\..\intermediate\$(Configuration)\$(PlatformName)\$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'">$(SolutionDir)..\..\..\intermediate\$(Configuration)\$(PlatformName)\$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'">$(SolutionDir)..\..\..\intermediate\$(Configuration)\$(PlatformName)\$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'">$(SolutionDir)..\..\..\intermediate\$(Configuration)\$(PlatformName)\$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'" />
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">lib$(ProjectName)-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'">lib$(ProjectName)-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">lib$(ProjectName)-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'">lib$(ProjectName)-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'">lib$(ProjectName)-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'">lib$(ProjectName)-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">lib$(ProjectName)-sgd</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib$(ProjectName)-sgd</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);$(OPENSSL_INCLUDE);./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>P2ENGINE_ENABLE_SSL;BOOST_ALL_STATIC_LINK;WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);$(OPENSSL_INCLUDE);./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BOOST_ALL_STATIC_LINK;WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);$(OPENSSL_INCLUDE);./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>P2ENGINE_ENABLE_SSL;WIN32;NDEBUG;_LIB;_WIN32_WINNT=0x0501;BOOST_ENABLE_ASSERT_HANDLER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Test|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);$(OPENSSL_INCLUDE);./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>P2ENGINE_ENABLE_SSL;WIN32;NDEBUG;_LIB;_WIN32_WINNT=0x0501;BOOST_ENABLE_ASSERT_HANDLER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_WIN32_WINNT=0x0501;BOOST_ENABLE_ASSERT_HANDLER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Test|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_WIN32_WINNT=0x0501;BOOST_ENABLE_ASSERT_HANDLER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Fast|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);$(OPENSSL_INCLUDE);./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>P2ENGINE_ENABLE_SSL;USE_TCMALLOC;BOOST_ALL_STATIC_LINK;WIN32;NDEBUG;_LIB;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WarningLevel>Level3</WarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib />
+    <Lib>
+      <AdditionalOptions>/INCLUDE:"__tcmalloc" %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Fast|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_TCMALLOC;BOOST_ALL_STATIC_LINK;WIN32;NDEBUG;_LIB;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WarningLevel>Level3</WarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib />
+    <Lib>
+      <AdditionalOptions>/INCLUDE:"__tcmalloc" %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

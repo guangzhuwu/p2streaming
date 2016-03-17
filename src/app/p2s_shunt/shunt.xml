@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<shunt id="1">
+  <receive>
+    <url>http://zb.v.qq.com:1863/?progid=2342060367&ostype=ios,neimenggu</url>
+    <delay>20</delay>
+  </receive>
+  <send>    
+    <url>udp://127.0.0.1:2008</url>
+	<url>http://0.0.0.0:58888</url>
+  </send>
+</shunt>

@@ -1,0 +1,24 @@
+package alive;
+
+option optimize_for = LITE_RUNTIME;
+
+
+//mds接收频道创建、删除及退出mds消息
+message mds_Alive
+{
+	required int32   type=1;
+	required bytes   id=2;
+	required int32   channel_bitrate=3;
+	required int32   out_kbps = 4;
+	required int32   client_count = 5;
+	required float   p2p_efficient = 6;
+	optional float   playing_quality = 7;
+	optional float   global_remote_to_local_lost_rate = 8;
+}
+
+message shunt_Alive {
+  required bytes id = 1;
+  required int32 kbps = 2;
+  required bool is_connected = 3;
+  optional int32 pid=4;
+}

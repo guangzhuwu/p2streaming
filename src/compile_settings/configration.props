@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros">
+    <SOLUTION_DIR>$(SolutionDir)</SOLUTION_DIR>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(BOOST_INCLUDE);$(PROTOBUF_INCLUDE);$(SolutionDir)..\..\..\src\lib\p2engine\;$(SolutionDir)..\..\..\src\lib\;$(SolutionDir)..\..\..\src\lib\p2engine\p2engine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libprotobuf-lite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(BOOST_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="SOLUTION_DIR">
+      <Value>$(SOLUTION_DIR)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

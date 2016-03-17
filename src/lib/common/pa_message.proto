@@ -1,0 +1,51 @@
+package proanalytics;
+
+option optimize_for = LITE_RUNTIME;
+
+enum sample_type
+{
+	SAMPLE_UNKNOW = 0;
+	P2S = 1;
+	P2V = 2;
+	DVB = 3;
+};
+
+enum control_type
+{
+	CONTROL_UNKNOW = 0;
+	CHANGE_INTERVAL = 1;
+};
+
+// PA_Client的初始化信息
+message init_msg
+{
+	required uint64 curr_time = 1;
+	required uint32 sample_interval = 2;
+	required uint32 packet_sample_count = 3;
+};
+
+// 采样类型
+message sample
+{
+	required string type = 1;
+	required string	channel_link = 2;
+	optional string channel_name = 3;
+	required uint64	time_swamp = 4;
+};
+
+// 提交采样数据的消息类型
+message sample_msg
+{
+	required string operators = 1;
+	required string mac = 2;
+	repeated sample	sample_list = 3;
+};
+
+// PA_Server发给PA_Client的控制信息的消息类型
+message control_msg
+{
+	required control_type type = 1 [default = CONTROL_UNKNOW];
+	optional uint32	interval = 2; // 新的采样间隔
+};
+
+

@@ -1,0 +1,97 @@
+#include "common/typedef.h"
+#include "common/policy.h"
+#include <p2engine/p2engine.hpp>
+using namespace p2common;
+using namespace p2engine;
+
+class tracker_service
+	: public basic_engine_object
+	, public policy::mix_acceptor<tracker_service,message_acceptor>
+	, public  fssignal::trackable
+{
+public:
+	tracker_service(io_service& net_svc)
+		:basic_engine_object(net_svc)
+		, count_(seconds(1))
+	{
+		set_obj_desc("tracker_service");
+	}
+
+	~tracker_service()
+	{
+		std::cout<<count_.bytes_per_second()<<std::endl;
+		stop();
+	}
+public:
+
+	void start()
+	{
+		__start();
+	}
+
+protected:
+	void __start()
+	{
+		BOOST_ASSERT(!urdp_acceptor_);
+		BOOST_ASSERT(!trdp_acceptor_);
+
+		const std::string domain= "ability/tracker_service";
+		endpoint edp = endpoint_from_string<endpoint>("127.0.0.1:9000");
+
+		error_code ec;
+		start_acceptor(edp,domain,ec);
+	}
+
+	void stop()
+	{
+		if (urdp_acceptor_)
+		{
+			error_code ec;
+			urdp_acceptor_->close(ec);
+			urdp_acceptor_.reset();
+		}
+		if (trdp_acceptor_)
+		{
+			error_code ec;
+			trdp_acceptor_->close(ec);
+			trdp_acceptor_.reset();
+		}
+
+	}
+public:
+	void on_accepted(message_socket_sptr conn, const error_code& ec)
+	{
+		if (!ec)
+		{
+
+			conn->ping_interval(seconds(50));
+			conn->keep_async_receiving();
+			pending_sockets_.insert(conn);
+			conn->disconnected_signal().bind(
+				&tracker_service::on_disconnected, this, conn.get(), _1
+				);
+
+		}
+	}
+	void on_disconnected(message_socket* conn, const error_code& ec)
+	{
+		pending_sockets_.erase(conn->shared_obj_from_this<message_socket>());
+		if(in_probability(0.01))
+			std::cout<<"keeped: "<<pending_sockets_.size()<<"\n";
+	}
+
+protected:
+	std::set<message_socket_sptr> pending_sockets_;
+	rough_speed_meter count_;
+};
+
+void main()
+{
+	io_service ios;
+	boost::shared_ptr<tracker_service> server_ptr =
+		boost::shared_ptr<tracker_service>(new tracker_service(ios));
+
+	server_ptr->start();
+	ios.run();
+}
+

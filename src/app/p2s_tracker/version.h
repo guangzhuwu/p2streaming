@@ -1,0 +1,6 @@
+#ifndef __P2S_TRACKER_VERSION
+#define __P2S_TRACKER_VERSION
+
+#define P2S_TRACKER_VERSION "2.0.0"
+
+#endif//__P2S_TRACKER_VERSION

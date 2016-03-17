@@ -1,0 +1,13 @@
+LOCAL_EXPORT_CPPFLAGS += -ffunction-sections -fdata-sections -fvisibility=hidden  -flto
+LOCAL_EXPORT_CFLAGS += -ffunction-sections -fdata-sections   -flto
+ifeq ($(TARGET_ARCH),mips)
+  LOCAL_EXPORT_LDFLAGS += -Wl,--gc-sections
+else
+  LOCAL_EXPORT_LDFLAGS += -Wl,--gc-sections,--icf=safe
+endif
+
+include $(APP_PROJECT_PATH)/Apps.mk
+include $(APP_PROJECT_PATH)/Libs.mk
+include $(APP_PROJECT_PATH)/Boost.mk
+include $(APP_PROJECT_PATH)/Openssl.mk
+include $(APP_PROJECT_PATH)/Protobuf.mk
